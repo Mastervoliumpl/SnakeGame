@@ -16,13 +16,17 @@ namespace SnakeGame
     /// </summary>
     public partial class SnakeWindow : Window
     {
+        private string gameDifficulty = "Medium";
 
-        private const int SnakeSquareSize = 20;
-        private const int SnakeStartLength = 3;
-        private const int SnakeStartSpeed = 400;
-        private const int SnakeSpeedThreshold = 100;
+        private int SnakeStartSpeed = 400;
+        private int speedIncreasePerFood = 10;
         private int actionsTaken = 0;
         private bool isPaused = false;
+        private int snakeLength;
+        private int currentScore = 0;
+        private int SnakeSpeedThreshold = 50;
+        private const int SnakeSquareSize = 20;
+        private const int SnakeStartLength = 3;
 
         private SolidColorBrush snakeBodyBrush = Brushes.Green;
         private SolidColorBrush snakeHeadBrush = Brushes.YellowGreen;
@@ -30,8 +34,6 @@ namespace SnakeGame
 
         public enum SnakeDirection { Left, Right, Up, Down };
         private SnakeDirection snakeDirection = SnakeDirection.Right;
-        private int snakeLength;
-        private int currentScore = 0;
 
         private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
         
@@ -43,6 +45,7 @@ namespace SnakeGame
         {
             InitializeComponent();
             gameTickTimer.Tick += GameTickTimer_Tick;
+            this.KeyDown += SnakeWindow_KeyDown;
         }
 
         private void GameTickTimer_Tick(object sender, EventArgs e)
@@ -54,6 +57,47 @@ namespace SnakeGame
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             DrawGameArea();
+            ShowSettingsWindow();
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SnakeWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Check if Left Ctrl and Q are pressed
+            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && e.Key == Key.Q)
+            {
+                EndGame();
+            }
+        }
+
+        private void UpdateGameStatus()
+        {
+            // Update the score
+            this.tbStatusScore.Text = currentScore.ToString();
+
+            // Display speed in tiles per second
+            double tilesPerSecond = 1000 / gameTickTimer.Interval.TotalMilliseconds;
+            this.tbStatusSpeed.Text = Math.Round(tilesPerSecond, 2).ToString(); // Rounded to 2 decimals
+        }
+
+        private void EndGame()
+        {
+            // Stop the game
+            gameTickTimer.IsEnabled = false;
+
+            // Open the EndGameWindow and pass the final score
+            EndGameWindow endGameWindow = new EndGameWindow(currentScore);
+            bool? result = endGameWindow.ShowDialog();
+
+            if (result == true)
+            {
+                // After pressing Continue, show the settings window
+                ShowSettingsWindow();
+            }
         }
 
         private void TogglePause()
@@ -69,21 +113,43 @@ namespace SnakeGame
             isPaused = !isPaused;
         }
 
-        private void UpdateGameStatus()
+        private void ShowSettingsWindow()
         {
-            this.tbStatusScore.Text = currentScore.ToString();
-            this.tbStatusSpeed.Text = gameTickTimer.Interval.TotalMilliseconds.ToString();
+            SettingsWindow settingsWindow = new SettingsWindow();
+            bool? result = settingsWindow.ShowDialog(); // Show as a modal dialog
+
+            if (result == true)
+            {
+                gameDifficulty = settingsWindow.SelectedDifficulty;
+                SetGameDifficulty();
+                StartNewGame();
+            }
+            else
+            {
+                this.Close(); // Close SnakeWindow if the settings window gets closed
+            }
         }
 
-        private void EndGame()
+        private void SetGameDifficulty()
         {
-            gameTickTimer.IsEnabled = false;
-            MessageBox.Show("Oooops, you died!\n\nTo start a new game, just press the Space bar...", "SnakeWPF");
-        }
-
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            switch (gameDifficulty)
+            {
+                case "Easy":
+                    SnakeStartSpeed = 500;
+                    SnakeSpeedThreshold = 200;
+                    speedIncreasePerFood = 20;
+                    break;
+                case "Medium":
+                    SnakeStartSpeed = 400;
+                    SnakeSpeedThreshold = 120;
+                    speedIncreasePerFood = 40;
+                    break;
+                case "Hard":
+                    SnakeStartSpeed = 300;
+                    SnakeSpeedThreshold = 80;
+                    speedIncreasePerFood = 60;
+                    break;
+            }
         }
 
         private void StartNewGame()
@@ -105,7 +171,7 @@ namespace SnakeGame
             snakeParts.Add(new SnakePart() { Position = new Point(SnakeSquareSize * 5, SnakeSquareSize * 5) });
             gameTickTimer.Interval = TimeSpan.FromMilliseconds(SnakeStartSpeed);
 
-            // Draw the snake again and some new food...
+            // Draw the snake again and some new food.
             DrawSnake();
             DrawSnakeFood();
 
@@ -172,7 +238,7 @@ namespace SnakeGame
                 Canvas.SetTop(rect, nextY);
                 Canvas.SetLeft(rect, nextX);
 
-                // Draw grid lines (border for each square)
+                // Draw grid lines
                 Rectangle gridLine = new Rectangle
                 {
                     Width = SnakeSquareSize,
@@ -218,22 +284,18 @@ namespace SnakeGame
 
         private void MoveSnake()
         {
-            // Remove the last part of the snake, in preparation of the new part added below  
             while (snakeParts.Count >= snakeLength)
             {
                 GameArea.Children.Remove(snakeParts[0].UiElement);
                 snakeParts.RemoveAt(0);
             }
-            // Next up, we'll add a new element to the snake, which will be the (new) head  
-            // Therefore, we mark all existing parts as non-head (body) elements and then  
-            // we make sure that they use the body brush  
+
             foreach (SnakePart snakePart in snakeParts)
             {
                 (snakePart.UiElement as Rectangle).Fill = snakeBodyBrush;
                 snakePart.IsHead = false;
             }
 
-            // Determine in which direction to expand the snake, based on the current direction  
             SnakePart snakeHead = snakeParts[snakeParts.Count - 1];
             double nextX = snakeHead.Position.X;
             double nextY = snakeHead.Position.Y;
@@ -253,15 +315,13 @@ namespace SnakeGame
                     break;
             }
 
-            // Now add the new head part to our list of snake parts...  
             snakeParts.Add(new SnakePart()
             {
                 Position = new Point(nextX, nextY),
                 IsHead = true
             });
-            //... and then have it drawn!  
+
             DrawSnake();
-            // We'll get to this later...  
             DoCollisionCheck();          
         }
 
@@ -299,10 +359,15 @@ namespace SnakeGame
         {
             snakeLength++;
             currentScore++;
-            int timerInterval = Math.Max(SnakeSpeedThreshold, (int)gameTickTimer.Interval.TotalMilliseconds - (currentScore * 2));
-            gameTickTimer.Interval = TimeSpan.FromMilliseconds(timerInterval);
+
+            // Decrease the interval by a fixed amount down to the threshold
+            int newInterval = (int)gameTickTimer.Interval.TotalMilliseconds - speedIncreasePerFood;
+            gameTickTimer.Interval = TimeSpan.FromMilliseconds(Math.Max(SnakeSpeedThreshold, newInterval));
+
+            // Remove the food + gen new food
             GameArea.Children.Remove(snakeFood);
             DrawSnakeFood();
+
             UpdateGameStatus();
         }
 
@@ -331,27 +396,23 @@ namespace SnakeGame
         {
             SnakePart snakeHead = snakeParts.Last();
 
-            // Check for collision with the walls
             if (IsCollisionWithWall(snakeHead))
             {
                 EndGame();
                 return;
             }
 
-            // Check for collision with itself
             if (IsCollisionWithSelf(snakeHead))
             {
                 EndGame();
                 return;
             }
 
-            // Check for collision with food
             if (IsCollisionWithFood(snakeHead))
             {
                 EatSnakeFood();
                 return;
             }
         }
-
     }
 }

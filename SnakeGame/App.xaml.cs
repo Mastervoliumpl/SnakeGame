@@ -9,6 +9,14 @@ namespace SnakeGame
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            // Create the startup window
+            SnakeWindow window = new SnakeWindow();
+
+            // Show the window
+            window.Show();
+        }
     }
 
 }

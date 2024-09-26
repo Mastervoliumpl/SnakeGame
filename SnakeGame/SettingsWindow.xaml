@@ -3,10 +3,164 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SnakeGame"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Settings"
+        Width="900" Height="600" 
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundColor}"
+        Foreground="{StaticResource TextColor}"
+        FontFamily="{StaticResource MainFont}"
+        MouseDown="Window_MouseDown">
+
+    <Viewbox>
+        <Grid Width="900" Height="600">
+            <!-- Define two rows: one for content and one for the button -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <!-- Content Area -->
+                <RowDefinition Height="Auto" />
+                <!-- Button Area -->
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Grid Background="{StaticResource GridBackgroundColor}" 
+                  Height="60" 
+                  VerticalAlignment="Top">
+                <TextBlock Text="Settings" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Left" 
+                           Margin="20,0,0,0" 
+                           FontSize="24" 
+                           FontWeight="Bold"/>
+                <Button Content="X" 
+                        Width="50" 
+                        Height="50" 
+                        HorizontalAlignment="Right" 
+                        Background="Transparent" 
+                        Foreground="White" 
+                        BorderThickness="0" 
+                        Click="BtnClose_Click"/>
+            </Grid>
+
+            <!-- Settings Section -->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400" Grid.Row="0">
+                <TextBlock Text="Select Difficulty:" 
+                           Margin="20" 
+                           FontSize="20"
+                           Foreground="{StaticResource TextColor}" 
+                           FontFamily="{StaticResource MainFont}" />
+
+                <!-- Easy difficulty radio button -->
+                <RadioButton Name="rbEasy"
+                             Content="Easy" 
+                             Margin="20" 
+                             GroupName="DifficultyGroup"
+                             Foreground="{StaticResource TextColor}"
+                             FontFamily="{StaticResource MainFont}">
+                    <RadioButton.Template>
+                        <ControlTemplate TargetType="RadioButton">
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Custom Circle for the RadioButton -->
+                                <Ellipse Width="20" Height="20" Stroke="{StaticResource GridLineColor}" StrokeThickness="2">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <!-- Checked state -->
+                                                <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                    <Setter Property="Fill" Value="LightBlue"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <!-- Content next to the Radio Button -->
+                                <ContentPresenter Margin="15,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </RadioButton.Template>
+                </RadioButton>
+
+                <!-- Medium difficulty radio button -->
+                <RadioButton Name="rbMedium"
+                             Content="Medium" 
+                             Margin="20"
+                             IsChecked="True"
+                             GroupName="DifficultyGroup"
+                             Foreground="{StaticResource TextColor}"
+                             FontFamily="{StaticResource MainFont}">
+                    <RadioButton.Template>
+                        <ControlTemplate TargetType="RadioButton">
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Custom Circle for the RadioButton -->
+                                <Ellipse Width="20" Height="20" Stroke="{StaticResource GridLineColor}" StrokeThickness="2">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <!-- Checked state -->
+                                                <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                    <Setter Property="Fill" Value="LightBlue"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <!-- Content next to the Radio Button -->
+                                <ContentPresenter Margin="15,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </RadioButton.Template>
+                </RadioButton>
+
+                <!-- Hard difficulty radio button -->
+                <RadioButton Name="rbHard"
+                             Content="Hard" 
+                             Margin="20" 
+                             GroupName="DifficultyGroup"
+                             Foreground="{StaticResource TextColor}"
+                             FontFamily="{StaticResource MainFont}">
+                    <RadioButton.Template>
+                        <ControlTemplate TargetType="RadioButton">
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Custom Circle for the RadioButton -->
+                                <Ellipse Width="20" Height="20" Stroke="{StaticResource GridLineColor}" StrokeThickness="2">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <!-- Checked state -->
+                                                <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                    <Setter Property="Fill" Value="LightBlue"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <!-- Content next to the Radio Button -->
+                                <ContentPresenter Margin="15,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </RadioButton.Template>
+                </RadioButton>
+            </StackPanel>
+
+            <!-- Start Game Button in the second row of the Grid -->
+            <Button Content="Start Game" 
+                    Width="200" 
+                    Height="50" 
+                    Margin="30" 
+                    Grid.Row="1" 
+                    HorizontalAlignment="Center" 
+                    Click="BtnStartGame_Click"
+                    Background="{StaticResource GridBackgroundColor}" 
+                    Foreground="{StaticResource TextColor}" 
+                    FontFamily="{StaticResource MainFont}"
+                    BorderBrush="{StaticResource GridLineColor}" 
+                    BorderThickness="2"
+                    IsDefault="True"/>
+        </Grid>
+    </Viewbox>
 </Window>

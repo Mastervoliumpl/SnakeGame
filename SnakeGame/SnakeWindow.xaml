@@ -1,22 +1,24 @@
-﻿<Window x:Class="SnakeGame.SnakeWindow"  
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
-    xmlns:local="clr-namespace:SnakeGame"  
-    mc:Ignorable="d"
-    Title="SnakeWPF - Score: 0" 
-     ContentRendered="Window_ContentRendered" 
-    KeyUp="Window_KeyUp"
-    ResizeMode="NoResize" 
-    WindowStyle="None"
-    WindowState="Maximized"
-    Background="{StaticResource BackgroundColor}"
-    Foreground="{StaticResource TextColor}"
-    FontFamily="{StaticResource MainFont}">
+﻿<Window x:Class="SnakeGame.SnakeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="SnakeWPF - Score: 0"
+        ContentRendered="Window_ContentRendered"
+        KeyUp="Window_KeyUp"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowState="Maximized"
+        Background="{StaticResource BackgroundColor}"
+        Foreground="{StaticResource TextColor}"
+        FontFamily="{StaticResource MainFont}">
+
     <Viewbox Margin="15">
         <DockPanel>
-            <Grid DockPanel.Dock="Top" 
+
+            <!-- Title Bar -->
+            <Grid DockPanel.Dock="Top"
                   Name="pnlTitleBar">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -24,42 +26,49 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <!-- Title Bar TextBlock Styles -->
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" 
-                        Value="24" />
-                        <Setter Property="FontWeight" 
-                        Value="Bold" />
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="FontWeight" Value="Bold" />
                     </Style>
                 </Grid.Resources>
 
+                <!-- Score Display -->
                 <WrapPanel Margin="10,0,0,0">
-                    <TextBlock>Score:</TextBlock>
+                    <TextBlock Text="Score:" />
                     <TextBlock Name="tbStatusScore">0</TextBlock>
                 </WrapPanel>
+
+                <!-- Speed Display -->
                 <WrapPanel Grid.Column="1">
-                    <TextBlock>Speed:</TextBlock>
+                    <TextBlock Text="Speed:" />
                     <TextBlock Name="tbStatusSpeed">0</TextBlock>
                 </WrapPanel>
-                <Button Grid.Column="2" 
-                DockPanel.Dock="Right" 
-                Background="Transparent" 
-                Foreground="White" 
-                FontWeight="Bold" 
-                FontSize="20" 
-                BorderThickness="0" 
-                Name="btnClose" 
-                Click="BtnClose_Click" 
-                Padding="10,0"
-                Content="X" />
+
+                <!-- Close Button -->
+                <Button Grid.Column="2"
+                        DockPanel.Dock="Right"
+                        Background="Transparent"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="20"
+                        BorderThickness="0"
+                        Name="btnClose"
+                        Click="BtnClose_Click"
+                        Padding="10,0"
+                        Content="X" />
             </Grid>
-            <Border BorderBrush="Black" 
+
+            <!-- Game Area -->
+            <Border BorderBrush="Black"
                     BorderThickness="5">
-                <Canvas Name="GameArea" 
-                        ClipToBounds="True" 
-                        Width="400" 
+                <Canvas Name="GameArea"
+                        ClipToBounds="True"
+                        Width="400"
                         Height="400" />
             </Border>
+
         </DockPanel>
     </Viewbox>
 </Window>
