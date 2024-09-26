@@ -81,11 +81,6 @@ namespace SnakeGame
             MessageBox.Show("Oooops, you died!\n\nTo start a new game, just press the Space bar...", "SnakeWPF");
         }
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this.DragMove();
-        }
-
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -158,31 +153,43 @@ namespace SnakeGame
 
         private void DrawGameArea()
         {
+            SolidColorBrush gridBackgroundColor = (SolidColorBrush)FindResource("GridBackgroundColor");
+            SolidColorBrush gridLineColor = (SolidColorBrush)FindResource("GridLineColor");
+
             bool doneDrawingBackground = false;
             int nextX = 0, nextY = 0;
-            int rowCounter = 0;
-            bool nextIsOdd = false;
 
-            while (doneDrawingBackground == false)
+            while (!doneDrawingBackground)
             {
+                // Draw background grid square
                 Rectangle rect = new Rectangle
                 {
                     Width = SnakeSquareSize,
                     Height = SnakeSquareSize,
-                    Fill = nextIsOdd ? Brushes.White : Brushes.Black
+                    Fill = gridBackgroundColor
                 };
                 GameArea.Children.Add(rect);
                 Canvas.SetTop(rect, nextY);
                 Canvas.SetLeft(rect, nextX);
 
-                nextIsOdd = !nextIsOdd;
+                // Draw grid lines (border for each square)
+                Rectangle gridLine = new Rectangle
+                {
+                    Width = SnakeSquareSize,
+                    Height = SnakeSquareSize,
+                    Stroke = gridLineColor,
+                    StrokeThickness = 1
+                };
+                GameArea.Children.Add(gridLine);
+                Canvas.SetTop(gridLine, nextY);
+                Canvas.SetLeft(gridLine, nextX);
+
+                // Move to the next square
                 nextX += SnakeSquareSize;
                 if (nextX >= GameArea.ActualWidth)
                 {
                     nextX = 0;
                     nextY += SnakeSquareSize;
-                    rowCounter++;
-                    nextIsOdd = (rowCounter % 2 != 0);
                 }
 
                 if (nextY >= GameArea.ActualHeight)
