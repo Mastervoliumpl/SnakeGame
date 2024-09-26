@@ -19,9 +19,10 @@ namespace SnakeGame
 
         private const int SnakeSquareSize = 20;
         private const int SnakeStartLength = 3;
-        private const int SnakeStartSpeed = 100;
+        private const int SnakeStartSpeed = 400;
         private const int SnakeSpeedThreshold = 100;
         private int actionsTaken = 0;
+        private bool isPaused = false;
 
         private SolidColorBrush snakeBodyBrush = Brushes.Green;
         private SolidColorBrush snakeHeadBrush = Brushes.YellowGreen;
@@ -53,6 +54,19 @@ namespace SnakeGame
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             DrawGameArea();
+        }
+
+        private void TogglePause()
+        {
+            if (isPaused)
+            {
+                gameTickTimer.Start();
+            }
+            else
+            {
+                gameTickTimer.Stop();
+            }
+            isPaused = !isPaused;
         }
 
         private void UpdateGameStatus()
@@ -132,6 +146,9 @@ namespace SnakeGame
                     if (snakeDirection != SnakeDirection.Left && actionsTaken < 1)
                         snakeDirection = SnakeDirection.Right;
                     actionsTaken++;
+                    break;
+                case Key.P:
+                    TogglePause();
                     break;
                 case Key.Space:
                     StartNewGame();
@@ -282,27 +299,52 @@ namespace SnakeGame
             UpdateGameStatus();
         }
 
+        private bool IsCollisionWithWall(SnakePart snakeHead)
+        {
+            return snakeHead.Position.Y < 0 ||
+                   snakeHead.Position.Y >= GameArea.ActualHeight ||
+                   snakeHead.Position.X < 0 ||
+                   snakeHead.Position.X >= GameArea.ActualWidth;
+        }
+
+        private bool IsCollisionWithSelf(SnakePart snakeHead)
+        {
+            return snakeParts.Take(snakeParts.Count - 1)
+                             .Any(part => part.Position.X == snakeHead.Position.X &&
+                                          part.Position.Y == snakeHead.Position.Y);
+        }
+
+        private bool IsCollisionWithFood(SnakePart snakeHead)
+        {
+            return snakeHead.Position.X == Canvas.GetLeft(snakeFood) &&
+                   snakeHead.Position.Y == Canvas.GetTop(snakeFood);
+        }
+
         private void DoCollisionCheck()
         {
-            SnakePart snakeHead = snakeParts[snakeParts.Count - 1];
+            SnakePart snakeHead = snakeParts.Last();
 
-            if ((snakeHead.Position.X == Canvas.GetLeft(snakeFood)) && (snakeHead.Position.Y == Canvas.GetTop(snakeFood)))
+            // Check for collision with the walls
+            if (IsCollisionWithWall(snakeHead))
+            {
+                EndGame();
+                return;
+            }
+
+            // Check for collision with itself
+            if (IsCollisionWithSelf(snakeHead))
+            {
+                EndGame();
+                return;
+            }
+
+            // Check for collision with food
+            if (IsCollisionWithFood(snakeHead))
             {
                 EatSnakeFood();
                 return;
             }
-
-            if ((snakeHead.Position.Y < 0) || (snakeHead.Position.Y >= GameArea.ActualHeight) ||
-            (snakeHead.Position.X < 0) || (snakeHead.Position.X >= GameArea.ActualWidth))
-            {
-                EndGame();
-            }
-
-            foreach (SnakePart snakeBodyPart in snakeParts.Take(snakeParts.Count - 1))
-            {
-                if ((snakeHead.Position.X == snakeBodyPart.Position.X) && (snakeHead.Position.Y == snakeBodyPart.Position.Y))
-                    EndGame();
-            }
         }
+
     }
 }
