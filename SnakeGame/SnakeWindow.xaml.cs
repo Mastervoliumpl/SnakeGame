@@ -17,10 +17,11 @@ namespace SnakeGame
     public partial class SnakeWindow : Window
     {
 
-        const int SnakeSquareSize = 20;
-        const int SnakeStartLength = 3;
-        const int SnakeStartSpeed = 400;
-        const int SnakeSpeedThreshold = 100;
+        private const int SnakeSquareSize = 20;
+        private const int SnakeStartLength = 3;
+        private const int SnakeStartSpeed = 100;
+        private const int SnakeSpeedThreshold = 100;
+        private int actionsTaken = 0;
 
         private SolidColorBrush snakeBodyBrush = Brushes.Green;
         private SolidColorBrush snakeHeadBrush = Brushes.YellowGreen;
@@ -46,6 +47,7 @@ namespace SnakeGame
         private void GameTickTimer_Tick(object sender, EventArgs e)
         {
             MoveSnake();
+            actionsTaken = 0;
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -111,27 +113,30 @@ namespace SnakeGame
             switch (e.Key)
             {
                 case Key.Up:
-                    if (snakeDirection != SnakeDirection.Down)
+                    
+                    if (snakeDirection != SnakeDirection.Down && actionsTaken < 1)
                         snakeDirection = SnakeDirection.Up;
+                    actionsTaken++;
                     break;
                 case Key.Down:
-                    if (snakeDirection != SnakeDirection.Up)
+                    if (snakeDirection != SnakeDirection.Up && actionsTaken < 1)
                         snakeDirection = SnakeDirection.Down;
+                    actionsTaken++;
                     break;
                 case Key.Left:
-                    if (snakeDirection != SnakeDirection.Right)
+                    if (snakeDirection != SnakeDirection.Right && actionsTaken < 1)
                         snakeDirection = SnakeDirection.Left;
+                    actionsTaken++;
                     break;
                 case Key.Right:
-                    if (snakeDirection != SnakeDirection.Left)
+                    if (snakeDirection != SnakeDirection.Left && actionsTaken < 1)
                         snakeDirection = SnakeDirection.Right;
+                    actionsTaken++;
                     break;
                 case Key.Space:
                     StartNewGame();
                     break;
             }
-            if (snakeDirection != originalSnakeDirection)
-                MoveSnake();
         }
 
         private void DrawGameArea()

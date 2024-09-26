@@ -5,8 +5,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
     xmlns:local="clr-namespace:SnakeGame"  
     mc:Ignorable="d"
-    Title="SnakeWPF - Score: 0" SizeToContent="WidthAndHeight" ContentRendered="Window_ContentRendered" KeyUp="Window_KeyUp"
-    ResizeMode="NoResize" WindowStyle="None" Background="Black" MouseDown="Window_MouseDown">
+    Title="SnakeWPF - Score: 0" ContentRendered="Window_ContentRendered" KeyUp="Window_KeyUp"
+    ResizeMode="NoResize" WindowStyle="None" Background="Black" MouseDown="Window_MouseDown"
+    WindowState="Maximized">
     <DockPanel Background="Black">
         <Grid DockPanel.Dock="Top" Name="pnlTitleBar">
             <Grid.ColumnDefinitions>
