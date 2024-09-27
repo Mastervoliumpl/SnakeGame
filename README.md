@@ -25,6 +25,7 @@ This is my attempt at creating a snake game using WPF and XAML, with the help of
 - Collision detection
 - Variable speed
 - Difficulties
+- Music & SoundEffects
 
 
 ## Known Issues
