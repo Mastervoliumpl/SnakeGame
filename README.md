@@ -12,7 +12,7 @@
 
 
 ## Description
-This is my go at attempting to create a snake game using WPF and XAML, with the help of https://wpf-tutorial.com/. 
+This is my attempt at creating a snake game using WPF and XAML, with the help of https://wpf-tutorial.com/. 
 
 
 ## Main Features
@@ -24,7 +24,7 @@ This is my go at attempting to create a snake game using WPF and XAML, with the 
 - Score
 - Collision detection
 - Variable speed
-- Difficutlies
+- Difficulties
 
 
 ## Known Issues
@@ -32,10 +32,13 @@ This is my go at attempting to create a snake game using WPF and XAML, with the 
 
 
 ## Changelogs
-### 0.3.0 - 27/09/2024 
+### 1.0.0 - 27/09/2024 
 - Added readme.md to github
 - Small changes all over
 - Scaling and etc.
+- Added sounds
+- Added mute music button
+- Small finishing polishes
 
 ### 0.2.0 - 26/09/2024 Logic and UI
 - Finished tutorial
@@ -52,25 +55,29 @@ This is my go at attempting to create a snake game using WPF and XAML, with the 
   - WPF application template. SnakeWindow.xaml.cs 
 
 ## TO DO List
+### Finished
 - [x] Finish Tutorial
 - [x] Add Git
 - [x] Add readme.md
-- [x] Fix clock offsync movement
-- [ ] Add movement buffer
-- [ ] Add possibility to change colors to custom
+- [x] Fix clock off-sync movement
 - [X] Hotkeys (Ctrl + Q, P)
 - [x] Set buttons as default (To need only keyboard to play)
-- [x] Split Collision check into their own methods
-- [x] Ensure speed is linear not exponential
+- [x] Split Collision checks into their own methods
+- [x] Ensure speed is linear, not exponential
 - [x] Add End game
 - [x] Add Start game
-- [ ] Add Leaderboard
 - [X] Add Game difficulty
 - [X] Add pause
-- [X] Display speed in tiles per not miliseconds
+- [X] Display speed in tiles per not milliseconds
 - [X] Add Fullscreen and scale to screen
+- [X] Add Music
+- [X] Add SoundEffects
+- [X] Style with different colors
+### Unfinished
+- [ ] Add the possibility to change colors to custom
+- [ ] Add movement buffer
+- [ ] Add Leaderboard
 - [ ] Add multiple fruits option
-
 
 ## Bug Reporting
 DM me on discord
